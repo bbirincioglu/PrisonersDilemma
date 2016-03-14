@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MenuActivity">
+
+    <Button
+        android:text="@string/bluetoothGameButton"
+        android:id="@id/bluetoothGameButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:background="@android:color/holo_blue_light"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <Button
+        android:text="@string/settingsButton"
+        android:id="@id/settingsButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:background="@android:color/holo_blue_light"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <Button
+        android:text="@string/gameResultsButton"
+        android:id="@id/gameResultsButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:background="@android:color/holo_blue_light"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <Button
+        android:text="@string/exitButton"
+        android:id="@id/exitButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:background="@android:color/holo_blue_light"/>
+</LinearLayout>

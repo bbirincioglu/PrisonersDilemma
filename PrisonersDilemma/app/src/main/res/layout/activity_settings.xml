@@ -1,0 +1,145 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.bbirincioglu.prisonersdilemma.SettingsActivity"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:gravity="center">
+
+    <TextView
+        android:text="P  L  A  Y  E  R  2"
+        android:gravity="right"
+        android:layout_marginRight="5dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <TextView
+            android:text="P\nL\nA\nY\nE\nR\n1\n"
+            android:textStyle="bold"
+            android:gravity="bottom"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:rowCount="3"
+            android:columnCount="3">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:hint="C"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:textColorHint="@android:color/holo_blue_dark"/>
+            <TextView
+                android:hint="D"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:textColorHint="@android:color/holo_red_dark"/>
+            <TextView
+                android:hint="C"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:textColorHint="@android:color/holo_blue_dark"/>
+            <EditText
+                android:id="@+id/copCop"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+            <EditText
+                android:id="@+id/copDef"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+            <TextView
+                android:hint="D"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:textColorHint="@android:color/holo_red_dark"/>
+
+            <EditText
+                android:id="@+id/defCop"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+            <EditText
+                android:id="@+id/defDef"
+                android:gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        </GridLayout>
+    </LinearLayout>
+    <TextView
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColorHint="@android:color/holo_green_light"
+        android:hint="Example of Valid Input: -4,3"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <CheckBox
+            android:id="@id/withCommitmentCheckBox"
+            android:text="@string/withCommitmentCheckBox"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@id/punishmentEditText"
+            android:hint="@string/punishmentEditText"
+            android:gravity="center"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/errorMessageTextView"
+        android:hint="Check Input Fields!!!"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:textColorHint="@android:color/holo_red_light"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@id/settingsSaveButton"
+        android:text="SAVE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"/>
+</LinearLayout>

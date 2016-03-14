@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.bbirincioglu.prisonersdilemma" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="Z32GkBvVyKHyXia19CPEslydqEFxtqPrnv5rgVnV" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="5CoIjDyr8AXADsrLAoQLCQ9nOfso0XMHUUMp7Kt9" />
+
+        <activity
+            android:name=".MainMenuActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".BluetoothGameActivity"
+            android:label="@string/title_activity_bluetooth_game" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SampleActivity"
+            android:label="@string/title_activity_sample" >
+        </activity>
+        <activity
+            android:name=".GameResultsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_game_results"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".GamePlayActivity"
+            android:label="@string/title_activity_game_play" >
+        </activity>
+    </application>
+
+</manifest>
