@@ -48,4 +48,12 @@
     <item type="id" name="withCommitmentCheckBox"></item>
     <item type="id" name="punishmentEditText"></item>
     <item type="id" name="settingsSaveButton"></item>
+
+    <!--GAME PLAY ACTIVITY-->
+    <item type="id" name="commitToLinearLayout"></item>
+    <item type="id" name="commitToCooperateButton"></item>
+    <item type="id" name="commitToDefectButton"></item>
+    <item type="id" name="decideToLinearLayout"></item>
+    <item type="id" name="decideToCooperateButton"></item>
+    <item type="id" name="decideToDefectButton"></item>
 </resources>

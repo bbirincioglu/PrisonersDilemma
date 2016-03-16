@@ -3,10 +3,14 @@ package com.example.bbirincioglu.prisonersdilemma;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
 /**
  * Created by bbirincioglu on 3/6/2016.
  */
-public class GameSettings {
+public class GameSettings implements Serializable {
+    public static final String[] KEYS = new String[]{"copCop", "copDef", "defCop", "defDef", "withCommitment", "punishment"};
     private Context context;
     private String copCop;
     private String copDef;
@@ -102,5 +106,28 @@ public class GameSettings {
 
     public void setPunishment(String punishment) {
         this.punishment = punishment;
+    }
+
+    public HashMap<String, String> toHashMap() {
+        HashMap<String, String> hashMap = new HashMap<String, String>();
+        String[] KEYS = GameSettings.KEYS;
+        hashMap.put(KEYS[0], getCopCop());
+        hashMap.put(KEYS[1], getCopDef());
+        hashMap.put(KEYS[2], getDefCop());
+        hashMap.put(KEYS[3], getDefDef());
+        hashMap.put(KEYS[4], getWithCommitment());
+        hashMap.put(KEYS[5], getPunishment());
+        return hashMap;
+    }
+
+    public static GameSettings fromHashMap(Context context, HashMap<String, String> hashMap) {
+        String[] KEYS = GameSettings.KEYS;
+        String copCop = hashMap.get(KEYS[0]);
+        String copDef = hashMap.get(KEYS[1]);
+        String defCop = hashMap.get(KEYS[2]);
+        String defDef = hashMap.get(KEYS[3]);
+        String withCommitment = hashMap.get(KEYS[4]);
+        String punishment = hashMap.get(KEYS[5]);
+        return new GameSettings(context, copCop, copDef, defCop, defDef, withCommitment, punishment);
     }
 }

@@ -24,6 +24,8 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_results);
+        ParseObject.registerSubclass(GameResult.class);
+
         GameResultsController controller = GameResultsController.getInstance();
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(this);

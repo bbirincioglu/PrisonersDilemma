@@ -26,8 +26,6 @@ public class GameResultsController {
 
     public void doGetResults(Context context) {
         ParseObject.registerSubclass(GameResult.class);
-        Parse.enableLocalDatastore(context);
-        Parse.initialize(context);
 
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(context);

@@ -16,19 +16,24 @@ public class GameResult extends ParseObject {
         super();
     }
 
-    private void obtainGameNo() {
+    public void obtainGameNo() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameNo");
-        query.getInBackground("dkMukfeuZN", new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if (e == null) {
-                    setGameNo(parseObject.getInt(Keys.GAME_NO));
-                } else {
-                    System.out.println("GAME NO OBJECT RETREIEVED FAILED.");
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        try {
+            ParseObject parseObject = query.get("dkMukfeuZN");
+            setGameNo(parseObject.getInt(Keys.GAME_NO));
+            parseObject.put(Keys.GAME_NO, getGameNo() + 1);
+            parseObject.saveInBackground();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public String getID() {
+        return getString(Keys.PARSE_OBJECT_ID);
+    }
+
+    public void setID(String id) {
+        put(Keys.PARSE_OBJECT_ID, id);
     }
 
     public int getGameNo() {

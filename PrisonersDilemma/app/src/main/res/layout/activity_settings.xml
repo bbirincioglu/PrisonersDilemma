@@ -8,7 +8,8 @@
     android:layout_gravity="center_horizontal"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:gravity="center">
+    android:gravity="center"
+    android:id="@+id/settingsLinearLayout">
 
     <TextView
         android:text="P  L  A  Y  E  R  2"
@@ -93,6 +94,7 @@
         </GridLayout>
     </LinearLayout>
     <TextView
+        android:id="@+id/settingsExampleTextView"
         android:textSize="12dp"
         android:textStyle="bold"
         android:textColorHint="@android:color/holo_green_light"
@@ -109,7 +111,7 @@
         <CheckBox
             android:id="@id/withCommitmentCheckBox"
             android:text="@string/withCommitmentCheckBox"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -118,7 +120,7 @@
             android:id="@id/punishmentEditText"
             android:hint="@string/punishmentEditText"
             android:gravity="center"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:visibility="gone"
             android:layout_width="wrap_content"

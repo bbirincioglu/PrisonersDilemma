@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
@@ -125,10 +126,25 @@ public class MainMenuController {
         if (name == null || surname == null || name.equals("") || surname.equals("")) {
             errorMessageTextView.setVisibility(View.VISIBLE);
         } else {
+            String capitalizedName = capitalizeFirstLetter(name);
+            String capitalizedSurname = capitalizeFirstLetter(surname);
+            SharedPreferences sharedPreferences = dialog.getActivity().getSharedPreferences(Keys.PLAYER_INFO_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Keys.PLAYER_NAME, capitalizedName);
+            editor.putString(Keys.PLAYER_SURNAME, capitalizedSurname);
+            editor.apply();
+
             dialog.cancel();
             MainMenuController controller = MainMenuController.getInstance();
             controller.doEnableDiscoverability(dialog.getActivity());
         }
+    }
+
+    private String capitalizeFirstLetter(String text) {
+        String capitalizedText = null;
+        char firstChar = text.charAt(0);
+        capitalizedText = Character.toUpperCase(firstChar) + text.substring(1, text.length());
+        return capitalizedText;
     }
 
     public void doEnableWifi(Context context) {

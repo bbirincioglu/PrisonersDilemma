@@ -11,7 +11,6 @@ import android.content.Context;
  */
 public class BluetoothGameController {
     private BluetoothHandler bluetoothHandler;
-
     private ServerConnectionThread serverConnectionThread;
     private ClientConnectionThread clientConnectionThread;
     private BluetoothSocket bluetoothSocket;

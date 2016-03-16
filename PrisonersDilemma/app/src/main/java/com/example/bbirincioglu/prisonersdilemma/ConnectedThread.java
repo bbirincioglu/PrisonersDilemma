@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.os.Message;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+
 import android.os.Handler;
 
 /**
@@ -15,8 +19,8 @@ public class ConnectedThread extends Thread {
     private Activity activity;
     private GamePlayActivity.MessageHandler messageHandler;
     private BluetoothSocket bluetoothSocket;
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     public ConnectedThread(Activity activity, BluetoothSocket bluetoothSocket, GamePlayActivity.MessageHandler messageHandler) {
         setActivity(activity);
@@ -48,13 +52,31 @@ public class ConnectedThread extends Thread {
                 message.obj = buffer;
                 getMessageHandler().sendMessage(message);
             } catch (Exception e) {
+                e.printStackTrace();
                 break;
             }
         }
     }
 
-    public void write(String message) {
-        byte[] messageAsByteArray = message.getBytes();
+    public void write(Object message) {
+        byte[] messageAsByteArray = null;
+
+        if (message instanceof String) {
+            String messageAsString = (String) message;
+            messageAsByteArray = messageAsString.getBytes();
+        } else if (message instanceof HashMap) {
+            HashMap<String, String> messageAsGameSettings = (HashMap<String, String>) message;
+
+            try {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+                objectOutputStream.writeObject(messageAsGameSettings);
+                objectOutputStream.close();
+                messageAsByteArray = byteArrayOutputStream.toByteArray();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         try {
             getOutputStream().write(messageAsByteArray);
@@ -101,5 +123,13 @@ public class ConnectedThread extends Thread {
 
     public void setMessageHandler(GamePlayActivity.MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
     }
 }

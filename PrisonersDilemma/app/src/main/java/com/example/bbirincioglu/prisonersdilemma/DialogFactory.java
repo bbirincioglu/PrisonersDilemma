@@ -13,6 +13,8 @@ public class DialogFactory {
     public static final String DIALOG_BACKGROUND_JOB = "dialogBackgroundJob";
     public static final String DIALOG_WIFI_MOBILE_DATA = "dialogWifiMobileData";
     public static final String DIALOG_PASSWORD = "dialogPassword";
+    public static final String DIALOG_GAME_RESULT = "dialogGameResult";
+
     private static DialogFactory instance;
     private Context context;
 
@@ -44,6 +46,8 @@ public class DialogFactory {
             dialog = new WifiMobileDataDialog(context);
         } else if (type.equals(DIALOG_PASSWORD)) {
             dialog = new PasswordDialog(context);
+        } else if (type.equals(DIALOG_GAME_RESULT)) {
+            dialog = new GameResultDialog(context);
         }
 
         ((SimpleDialog) dialog).initialize();

@@ -1,8 +1,11 @@
 package com.example.bbirincioglu.prisonersdilemma;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +22,13 @@ public class ParseConnection {
     private ArrayList<ParseConnectionObserver> observers;
     private List<Object> objects;
     private int currentState;
+    private int currentGameNo;
 
     private ParseConnection() {
         setObservers(new ArrayList<ParseConnectionObserver>());
         setObjects(new ArrayList<Object>());
         setCurrentState(STATE_NO_BACKGROUND_JOB);
+        setCurrentGameNo(0);
     }
 
     public static ParseConnection getInstance() {
@@ -34,7 +39,7 @@ public class ParseConnection {
         return instance;
     }
 
-    public void obtainObjects(String className) {
+    public void obtainObjects(String className) {//USED FOR GAMERESULTS ACTIVITY
         setCurrentState(STATE_BACKGROUND_JOB_STARTED);
         ParseQuery query = ParseQuery.getQuery(className);
         query.findInBackground(new FindCallback() {
@@ -64,6 +69,20 @@ public class ParseConnection {
         });
     }
 
+    public ParseObject obtainObject(String className, String columnName, Object uniqueColumnValue) {
+        ParseObject object = null;
+        ParseQuery query = ParseQuery.getQuery(className);
+        query.whereEqualTo(columnName, uniqueColumnValue);
+
+        try {
+            object = query.getFirst();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return object;
+    }
+
     public List<Object> getObjects() {
         return objects;
     }
@@ -90,11 +109,22 @@ public class ParseConnection {
     }
 
     public void addObserver(ParseConnectionObserver observer) {
-        getObservers().add(observer);
+        if (!getObservers().contains(observer)) {
+            getObservers().add(observer);
+        }
     }
 
     public void removeObserver(ParseConnectionObserver observer) {
         getObservers().remove(observer);
+    }
+
+    public void removeAllObservers() {
+        ArrayList<ParseConnectionObserver> observers = getObservers();
+        int size = observers.size();
+
+        for (int i = 0; i < size; i++) {
+            observers.remove(0);
+        }
     }
 
     public void notifyObservers() {
@@ -103,5 +133,37 @@ public class ParseConnection {
         for (ParseConnectionObserver observer : observers) {
             observer.update(this);
         }
+    }
+
+    public void createEmptyGameResult() {
+        try {
+            final GameResult gr = new GameResult();
+            gr.obtainGameNo();
+            gr.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        setCurrentGameNo(gr.getGameNo());
+                        GamePlayController.getInstance().getConnectedThread().write("gameNoOnly:" + gr.getGameNo());
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCurrentGameNo() {
+        return currentGameNo;
+    }
+
+    public void setCurrentGameNo(int currentGameNo) {
+        this.currentGameNo = currentGameNo;
+    }
+
+    public static ParseConnection getNewInstance() {
+        return new ParseConnection();
     }
 }

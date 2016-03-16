@@ -55,12 +55,6 @@ public class PlayerInfoDialog extends Dialog implements SimpleDialog {
         public void onClick(View v) {
             String name = ((EditText) findViewById(R.id.nameEditText)).getText().toString();
             String surname = ((EditText) findViewById(R.id.surnameEditText)).getText().toString();
-
-            SharedPreferences sp = getActivity().getSharedPreferences(Keys.DUMMY_PREFERENCES, getActivity().MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString(Keys.NAME, name);
-            editor.commit();
-
             MainMenuController.getInstance().doCheckPlayerInfo(reference, name, surname);
         }
     }

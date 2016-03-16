@@ -12,6 +12,7 @@ public class Keys {
     public static final String WITH_COMMITMENT = "withCommitment";
     public static final String PUNISHMENT = "punishment";
 
+    public static final String PARSE_OBJECT_ID = "objectId";
     public static final String GAME_NO = "gameNo";
     public static final String PLAYER_1_NAME = "p1Name";
     public static final String PLAYER_1_SURNAME = "p1Surname";
@@ -25,6 +26,7 @@ public class Keys {
     public static final String RETURN_FROM_ACTIVITY = "returnFromActivity";
     public static final String PASSWORD_RESTRICTED_AREA = "14531915";
 
-    public static final String DUMMY_PREFERENCES = "preferencesDummy";
-    public static final String NAME = "name";
+    public static final String PLAYER_INFO_PREFERENCES = "playerInfoPreferences";
+    public static final String PLAYER_NAME = "playerName";
+    public static final String PLAYER_SURNAME = "playerSurname";
 }

@@ -2,20 +2,16 @@ package com.example.bbirincioglu.prisonersdilemma;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
 
 /**
  * Created by bbirincioglu on 3/6/2016.
  */
-public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseConnectionObserver, ConnectionThreadObserver {
+public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseConnectionObserver, ConnectionThreadObserver, GamePlayActivity.MessageHandlerObserver {
     private Activity activity;
 
     public BackgroundJobDialog(Context context) {
@@ -89,6 +85,50 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
             } else if (currentStatus == ConnectionThread.STATUS_CONNECTION_FAILED) {
                 setCancelable(true);
                 textView.setText("Connection Failed.");
+            }
+        }
+    }
+
+    @Override
+    public void update(GamePlayActivity.MessageHandler messageHandler) {
+        if (!isShowing()) {
+            findViewById(R.id.startGameButton).setVisibility(View.GONE);
+            show();
+        }
+
+        String waitingCommit = "Waiting For Other Player To Commit...";
+        String waitingDecide = "Waiting For Other Player To Decide...";
+
+        boolean isGameWithCommitment = messageHandler.isGameWithCommitment();
+        boolean isOtherPlayerCommitted = messageHandler.isOtherPlayerCommitted();
+        boolean isOtherPlayerDecided = messageHandler.isOtherPlayerDecided();
+        TextView textView = (TextView) findViewById(R.id.backgroundJobTextView);
+
+        if (isGameWithCommitment) {
+            if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_COMMITMENT)) {
+                if (isOtherPlayerCommitted) {
+                    dismiss();
+                } else {
+                    textView.setText(waitingCommit);
+                }
+            } else if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_DECISION)) {
+                if (isOtherPlayerDecided) {
+                    dismiss();
+                    GamePlayController controller = GamePlayController.getInstance();
+                    ParseConnection parseConnection = ((GamePlayActivity) getActivity()).getParseConnection();
+                    controller.doDisplayGameResult(getActivity(), parseConnection);
+                } else {
+                    textView.setText(waitingDecide);
+                }
+            }
+        } else {
+            if (isOtherPlayerDecided) {
+                dismiss();
+                GamePlayController controller = GamePlayController.getInstance();
+                ParseConnection parseConnection = ((GamePlayActivity) getActivity()).getParseConnection();
+                controller.doDisplayGameResult(getActivity(), parseConnection);
+            } else {
+                textView.setText(waitingDecide);
             }
         }
     }
