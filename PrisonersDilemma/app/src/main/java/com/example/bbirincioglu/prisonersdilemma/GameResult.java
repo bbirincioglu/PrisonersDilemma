@@ -12,6 +12,12 @@ import com.parse.SaveCallback;
  */
 @ParseClassName("GameResult")
 public class GameResult extends ParseObject {
+    public static final String[] HEADERS = new String[]{"GAME_NO", "P1_NAME", "P1_SURNAME", "P1_COMMITMENT",
+            "P1_DECISION", "P2_NAME", "P2_SURNAME", "P2_COMMITMENT",
+            "P2_DECISION", "COP_COP", "COP_DEF", "DEF_COP", "DEF_DEF",
+            "WITH_COMMITMENT", "PUNISHMENT"};
+    public static final String SPLIT_WITH = "___";
+
     public GameResult() {
         super();
     }
@@ -20,7 +26,7 @@ public class GameResult extends ParseObject {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameNo");
 
         try {
-            ParseObject parseObject = query.get("dkMukfeuZN");
+            ParseObject parseObject = query.get("w0WN9DdCLq");
             setGameNo(parseObject.getInt(Keys.GAME_NO));
             parseObject.put(Keys.GAME_NO, getGameNo() + 1);
             parseObject.saveInBackground();
@@ -169,21 +175,21 @@ public class GameResult extends ParseObject {
 
     public String toString() {
         String gameResultAsString;
-        int gameNo = getGameNo();
-        String p1Name = getP1Name();
-        String p1Surname = getP1Surname();
-        String p1Commitment = getP1Commitment();
-        String p2Name = getP2Name();
-        String p2Surname = getP2Surname();
-        String p2Commitment = getP2Commitment();
-        String copCop = getCopCop();
-        String copDef = getCopDef();
-        String defCop = getDefCop();
-        String defDef = getDefDef();
-        gameResultAsString = "{" + gameNo + ";" + p1Name + ";" + p1Surname + ";"
-                                + p1Commitment + ";" + p2Name + ";" + p2Surname + ";"
-                                + p2Commitment + ";" + copCop + ";" + copDef + ";"
-                                + defCop + ";" + defDef + "}";
+        gameResultAsString = getGameNo() + SPLIT_WITH
+                + getP1Name() + SPLIT_WITH
+                + getP1Surname() + SPLIT_WITH
+                + getP1Commitment() + SPLIT_WITH
+                + getP1Decision() + SPLIT_WITH
+                + getP2Name() + SPLIT_WITH
+                + getP2Surname() + SPLIT_WITH
+                + getP2Commitment() + SPLIT_WITH
+                + getP2Decision() + SPLIT_WITH
+                + getCopCop() + SPLIT_WITH
+                + getCopDef() + SPLIT_WITH
+                + getDefCop() + SPLIT_WITH
+                + getDefDef() + SPLIT_WITH
+                + getWithCommitment() + SPLIT_WITH
+                + getPunishment() + SPLIT_WITH;
         return gameResultAsString;
     }
 }

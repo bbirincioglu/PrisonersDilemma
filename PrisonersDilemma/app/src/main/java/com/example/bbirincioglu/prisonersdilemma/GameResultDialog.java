@@ -16,6 +16,14 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
         super(context, android.R.style.Theme_Holo_Light_Dialog);
         setCancelable(false);
         setActivity((Activity) context);
+
+        if (getActivity() instanceof BluetoothGameActivity) {
+            ((BluetoothGameActivity) getActivity()).getDialogs().add(this);
+        }
+
+        if (getActivity() instanceof GamePlayActivity) {
+            ((GamePlayActivity) getActivity()).getDialogs().add(this);
+        }
     }
 
     @Override
@@ -27,37 +35,30 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
     }
 
     public void injectContent(GameResult gameResult) {
-        String withCommitment = gameResult.getWithCommitment();
-        String copCop = gameResult.getCopCop();
-        String copDef = gameResult.getCopDef();
-        String defCop = gameResult.getDefCop();
-        String defDef = gameResult.getDefDef();
-        String punishment = gameResult.getPunishment();
+        GameResultEvaluator evaluator = new GameResultEvaluator();
+        int[] result = evaluator.evaluate(gameResult);
 
         String p1Name = gameResult.getP1Name();
         String p1Surname = gameResult.getP1Surname();
         String p1Commitment = gameResult.getP1Commitment();
         String p1Decision = gameResult.getP1Decision();
+        String p1Payoff = String.valueOf(result[0]);
 
         String p2Name = gameResult.getP2Name();
         String p2Surname = gameResult.getP2Surname();
         String p2Commitment = gameResult.getP2Commitment();
         String p2Decision = gameResult.getP2Decision();
-
-        ((TextView) findViewById(R.id.copCop)).setText(copCop);
-        ((TextView) findViewById(R.id.copDef)).setText(copDef);
-        ((TextView) findViewById(R.id.defCop)).setText(defCop);
-        ((TextView) findViewById(R.id.defDef)).setText(defDef);
-        ((TextView) findViewById(R.id.withCommitmentCheckBox)).setText(withCommitment);
-        ((TextView) findViewById(R.id.punishmentEditText)).setText(punishment);
+        String p2Payoff = String.valueOf(result[1]);
 
         ((TextView) findViewById(R.id.p1NameEditText)).setText(p1Name);
         ((TextView) findViewById(R.id.p1CommitmentEditText)).setText(p1Commitment);
         ((TextView) findViewById(R.id.p1DecisionEditText)).setText(p1Decision);
+        ((TextView) findViewById(R.id.p1PayoffEditText)).setText(p1Payoff);
 
         ((TextView) findViewById(R.id.p2NameEditText)).setText(p2Name);
         ((TextView) findViewById(R.id.p2CommitmentEditText)).setText(p2Commitment);
         ((TextView) findViewById(R.id.p2DecisionEditText)).setText(p2Decision);
+        ((TextView) findViewById(R.id.p2PayoffEditText)).setText(p2Payoff);
     }
 
     public class ButtonListener implements View.OnClickListener {
@@ -65,10 +66,11 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
             int buttonID = v.getId();
 
             if (buttonID == R.id.restartButton) {
-                new ActivitySwitcher().fromPreviousToNext(getActivity(), GamePlayActivity.class, null, true);
+                new ActivitySwitcher().fromPreviousToNext(getActivity(), BluetoothGameActivity.class, null, true);
             } else if (buttonID == R.id.exitButton) {
                 try {
                     SocketSingleton.getInstance().getSocket().close();
+                    getActivity().finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

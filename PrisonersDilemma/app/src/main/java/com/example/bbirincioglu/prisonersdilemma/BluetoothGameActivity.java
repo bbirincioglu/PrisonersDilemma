@@ -13,14 +13,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class BluetoothGameActivity extends AppCompatActivity {
     private DiscoveryListDialog discoveryListDialog;
     private BackgroundJobDialog backgroundJobDialog;
     private BluetoothGameController controller;
+    private ArrayList<Dialog> dialogs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_game);
+        setDialogs(new ArrayList<Dialog>());
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(this);
         setBackgroundJobDialog((BackgroundJobDialog) dialogFactory.create(DialogFactory.DIALOG_BACKGROUND_JOB));
@@ -97,5 +102,13 @@ public class BluetoothGameActivity extends AppCompatActivity {
 
     public void setController(BluetoothGameController controller) {
         this.controller = controller;
+    }
+
+    public ArrayList<Dialog> getDialogs() {
+        return dialogs;
+    }
+
+    public void setDialogs(ArrayList<Dialog> dialogs) {
+        this.dialogs = dialogs;
     }
 }

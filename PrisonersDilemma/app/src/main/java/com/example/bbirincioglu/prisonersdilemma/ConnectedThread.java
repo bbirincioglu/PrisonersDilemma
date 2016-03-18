@@ -52,6 +52,7 @@ public class ConnectedThread extends Thread {
                 message.obj = buffer;
                 getMessageHandler().sendMessage(message);
             } catch (Exception e) {
+                System.out.println("CONNECTED THREAD READ EXCEPTION: then break happened.");
                 e.printStackTrace();
                 break;
             }

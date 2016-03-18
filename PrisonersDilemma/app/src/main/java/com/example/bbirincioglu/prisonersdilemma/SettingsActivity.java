@@ -2,6 +2,8 @@ package com.example.bbirincioglu.prisonersdilemma;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         checkBox.setOnClickListener(controller);
 
         EditText punishmentEditText = (EditText) findViewById(R.id.punishmentEditText);
+        punishmentEditText.addTextChangedListener(new MyTextChangeListener());
         punishmentEditText.setText(settings.getPunishment());
 
         ((Button) findViewById(R.id.settingsSaveButton)).setOnClickListener(controller);
@@ -85,5 +88,55 @@ public class SettingsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putBoolean(Keys.RETURN_FROM_ACTIVITY, true);
         new ActivitySwitcher().fromPreviousToNext(this, MainMenuActivity.class, bundle, true);
+    }
+
+    public class MyTextChangeListener implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = s.toString();
+
+            if (text != null && !text.equals("")) {
+                String[] result = validate(text);
+                boolean isValid = Boolean.valueOf(result[0]);
+                String validatedText = result[1];
+
+                if (!isValid) {
+                    s.clear();
+                    s.append(validatedText);
+                }
+            }
+        }
+
+        private String[] validate(String text) {
+            String[] result = new String[2];
+            String isValid = "true";
+            String validatedText = "";
+            String control = "0123456789";
+            int length = text.length();
+
+            for (int i = 0; i < length; i++) {
+                char charAtI = text.charAt(i);
+
+                if (control.contains("" + charAtI)) {
+                    validatedText += charAtI;
+                } else {
+                    isValid = "false";
+                }
+            }
+
+            result[0] = isValid;
+            result[1] = validatedText;
+            return result;
+        }
     }
 }

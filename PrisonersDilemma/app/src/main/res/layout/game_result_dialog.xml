@@ -5,85 +5,6 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center">
-        <EditText
-            android:text="COCO"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:text="CODE"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:text="DECO"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:text="DEDE"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:text="comm."
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:text="pun."
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-    </TableRow>
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center">
-        <EditText
-            android:id="@id/copCop"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:id="@id/copDef"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:id="@id/defCop"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:id="@id/defDef"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:id="@id/withCommitmentCheckBox"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-        <EditText
-            android:id="@id/punishmentEditText"
-            android:text="null"
-            android:textSize="14dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"/>
-    </TableRow>
 
     <TableRow
         android:layout_width="wrap_content"
@@ -92,22 +13,32 @@
         android:gravity="center">
         <EditText
             android:text="NAME-SURN."
+            android:textStyle="bold"
             android:textSize="14dp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:textColor="@android:color/holo_red_dark"/>
         <EditText
             android:text="COMMITMENT"
+            android:textStyle="bold"
             android:textSize="14dp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:textColor="@android:color/holo_red_dark"/>
         <EditText
             android:text="DECISION"
+            android:textStyle="bold"
             android:textSize="14dp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:textColor="@android:color/holo_red_dark"/>
+        <EditText
+            android:text="PAYOFF"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/holo_red_dark"/>
     </TableRow>
 
     <TableRow
@@ -120,22 +51,26 @@
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p1CommitmentEditText"
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p1DecisionEditText"
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
+
+        <EditText
+            android:id="@+id/p1PayoffEditText"
+            android:text="null"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"/>
     </TableRow>
 
     <TableRow
@@ -148,22 +83,26 @@
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p2CommitmentEditText"
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p2DecisionEditText"
             android:text="null"
             android:textSize="14dp"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_span="2"/>
+            android:layout_width="wrap_content"/>
+
+        <EditText
+            android:id="@+id/p2PayoffEditText"
+            android:text="null"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"/>
     </TableRow>
 
     <TableRow
@@ -177,15 +116,13 @@
             android:background="@android:color/holo_blue_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_span="2"/>
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
         <Button
             android:id="@+id/exitButton"
             android:text="EXIT"
             android:background="@android:color/holo_blue_light"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_span="2"/>
+            android:layout_height="wrap_content"/>
     </TableRow>
 
 </TableLayout>

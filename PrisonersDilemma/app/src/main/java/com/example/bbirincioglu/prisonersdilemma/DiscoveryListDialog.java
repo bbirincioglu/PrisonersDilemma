@@ -29,6 +29,14 @@ public class DiscoveryListDialog extends Dialog implements BCReceiverObserver, S
     public DiscoveryListDialog(Context context) {
         super(context, android.R.style.Theme_Holo_Light_Dialog);
         setActivity((Activity) context);
+
+        if (getActivity() instanceof BluetoothGameActivity) {
+            ((BluetoothGameActivity) getActivity()).getDialogs().add(this);
+        }
+
+        if (getActivity() instanceof GamePlayActivity) {
+            ((GamePlayActivity) getActivity()).getDialogs().add(this);
+        }
     }
 
     @Override

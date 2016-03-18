@@ -19,6 +19,7 @@ import com.parse.ParseObject;
 import java.util.List;
 
 public class GameResultsActivity extends AppCompatActivity implements ParseConnectionObserver {
+    private GameResultsController gameResultsController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
         setContentView(R.layout.activity_game_results);
         ParseObject.registerSubclass(GameResult.class);
 
-        GameResultsController controller = GameResultsController.getInstance();
+        setGameResultsController(new GameResultsController());
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(this);
         dialogFactory.create(DialogFactory.DIALOG_PASSWORD).show();
@@ -119,12 +120,20 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
 
     public void onClick(View v) {
         int buttonID = v.getId();
-        GameResultsController controller = GameResultsController.getInstance();
+        GameResultsController controller = getGameResultsController();
 
         if (buttonID == R.id.gameResultsGetResultsButton) {
             controller.doGetResults(this);
         } else if (buttonID == R.id.gameResultsSaveResultsButton) {
             controller.doSaveResults(this);
         }
+    }
+
+    public GameResultsController getGameResultsController() {
+        return gameResultsController;
+    }
+
+    public void setGameResultsController(GameResultsController gameResultsController) {
+        this.gameResultsController = gameResultsController;
     }
 }

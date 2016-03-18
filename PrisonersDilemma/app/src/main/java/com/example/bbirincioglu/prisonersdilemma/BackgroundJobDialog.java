@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by bbirincioglu on 3/6/2016.
@@ -19,6 +21,14 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         setActivity((Activity) context);
         setTitle("BACKGROUND JOB");
         setCancelable(false);
+
+        if (getActivity() instanceof BluetoothGameActivity) {
+            ((BluetoothGameActivity) getActivity()).getDialogs().add(this);
+        }
+
+        if (getActivity() instanceof GamePlayActivity) {
+            ((GamePlayActivity) getActivity()).getDialogs().add(this);
+        }
     }
 
     @Override
@@ -103,6 +113,7 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         boolean isOtherPlayerCommitted = messageHandler.isOtherPlayerCommitted();
         boolean isOtherPlayerDecided = messageHandler.isOtherPlayerDecided();
         TextView textView = (TextView) findViewById(R.id.backgroundJobTextView);
+        GamePlayActivity gamePlayActivity = ((GamePlayActivity) getActivity());
 
         if (isGameWithCommitment) {
             if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_COMMITMENT)) {
@@ -112,20 +123,20 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
                     textView.setText(waitingCommit);
                 }
             } else if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_DECISION)) {
-                if (isOtherPlayerDecided) {
+                if (isOtherPlayerDecided && ((GamePlayActivity) getActivity()).getParseConnection().isMyDecisionSaved()) {
                     dismiss();
-                    GamePlayController controller = GamePlayController.getInstance();
-                    ParseConnection parseConnection = ((GamePlayActivity) getActivity()).getParseConnection();
-                    controller.doDisplayGameResult(getActivity(), parseConnection);
+                    GamePlayController controller = gamePlayActivity.getGamePlayController();
+                    ParseConnection parseConnection = gamePlayActivity.getParseConnection();
+                    controller.doDisplayGameResult(gamePlayActivity, parseConnection);
                 } else {
                     textView.setText(waitingDecide);
                 }
             }
         } else {
-            if (isOtherPlayerDecided) {
+            if (isOtherPlayerDecided && gamePlayActivity.getParseConnection().isMyDecisionSaved()) {
                 dismiss();
-                GamePlayController controller = GamePlayController.getInstance();
-                ParseConnection parseConnection = ((GamePlayActivity) getActivity()).getParseConnection();
+                GamePlayController controller = gamePlayActivity.getGamePlayController();
+                ParseConnection parseConnection = gamePlayActivity.getParseConnection();
                 controller.doDisplayGameResult(getActivity(), parseConnection);
             } else {
                 textView.setText(waitingDecide);

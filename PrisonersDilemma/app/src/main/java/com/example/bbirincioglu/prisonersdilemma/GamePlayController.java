@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+
+import java.util.HashMap;
 
 /**
  * Created by bbirincioglu on 3/14/2016.
@@ -11,19 +15,10 @@ import com.parse.Parse;
 public class GamePlayController {
     public static final String CHOICE_COOPERATE = "COOPERATE";
     public static final String CHOICE_DEFECT = "DEFECT";
-    private static GamePlayController instance;
     private ConnectedThread connectedThread;
 
-    private GamePlayController() {
+    public GamePlayController() {
 
-    }
-
-    public static GamePlayController getInstance() {
-        if (instance == null) {
-            instance = new GamePlayController();
-        }
-
-        return instance;
     }
 
     public ConnectedThread getConnectedThread() {
@@ -48,8 +43,7 @@ public class GamePlayController {
             gameResult.setP2Commitment(commitment);
         }
 
-        doSaveNameSurnameAndSettings(gameResult, context, parseConnection);
-        getConnectedThread().write("committed");
+        doSaveNameSurnameAndSettings(gameResult, context, parseConnection, "committed");
     }
 
     public void doSaveDecision(Context context, ParseConnection parseConnection, String decision) {
@@ -62,11 +56,10 @@ public class GamePlayController {
             gameResult.setP2Decision(decision);
         }
 
-        doSaveNameSurnameAndSettings(gameResult, context, parseConnection);
-        getConnectedThread().write("decided");
+        doSaveNameSurnameAndSettings(gameResult, context, parseConnection, "decided");
     }
 
-    private void doSaveNameSurnameAndSettings(GameResult gameResult, Context context, ParseConnection parseConnection) {
+    private void doSaveNameSurnameAndSettings(GameResult gameResult, final Context context, ParseConnection parseConnection, final String writeText) {
         GameSettings gameSettings = GameSettings.loadFromPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(Keys.PLAYER_INFO_PREFERENCES, Context.MODE_PRIVATE);
         String name = sp.getString(Keys.PLAYER_NAME, "Default");
@@ -86,7 +79,23 @@ public class GamePlayController {
         gameResult.setDefDef(gameSettings.getDefDef());
         gameResult.setWithCommitment(gameSettings.getWithCommitment());
         gameResult.setPunishment(gameSettings.getPunishment());
-        gameResult.saveInBackground();
+        gameResult.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (writeText.equals("decided")) {
+                    final GamePlayActivity gamePlayActivity = ((GamePlayActivity) context);
+                    gamePlayActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            gamePlayActivity.getParseConnection().setMyDecisionSaved(true);
+                            gamePlayActivity.getMessageHandler().notifyObservers();
+                        }
+                    });
+                }
+
+                getConnectedThread().write(writeText);
+            }
+        });
     }
 
     public void doDisplayGameResult(Context context, ParseConnection parseConnection) {

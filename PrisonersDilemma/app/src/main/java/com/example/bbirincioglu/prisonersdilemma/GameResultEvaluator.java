@@ -11,16 +11,12 @@ public class GameResultEvaluator {
 
     }
 
-    public String evaluate(GameResult gameResult) {
-        String result = null;
+    public int[] evaluate(GameResult gameResult) {
+        int[] result = null;
 
-        String p1Name = gameResult.getP1Name();
-        String p1Surname = gameResult.getP1Surname();
         String p1Commitment = gameResult.getP1Commitment();
         String p1Decision = gameResult.getP1Decision();
 
-        String p2Name = gameResult.getP2Name();
-        String p2Surname = gameResult.getP2Surname();
         String p2Commitment = gameResult.getP2Commitment();
         String p2Decision = gameResult.getP2Decision();
 
@@ -32,25 +28,23 @@ public class GameResultEvaluator {
         int[] defDef = stringToIntArray(gameResult.getDefDef(), splitWith);
         int punishment = Integer.valueOf(gameResult.getPunishment());
 
+        if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_COOPERATE)) {
+            result = copCop;
+        } else if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_DEFECT)) {
+            result = copDef;
+        } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_COOPERATE)) {
+            result = defCop;
+        } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_DEFECT)) {
+            result = defDef;
+        }
+
         if (withCommitment) {
-            if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_COOPERATE)) {
-
-            } else if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_DEFECT)) {
-
-            } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_COOPERATE)) {
-
-            } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_DEFECT)) {
-
+            if (!p1Commitment.equals(p1Decision)) {
+                result[0] = result[0] - punishment;
             }
-        } else {
-            if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_COOPERATE)) {
 
-            } else if (p1Decision.equals(CHOICE_COOPERATE) && p2Decision.equals(CHOICE_DEFECT)) {
-
-            } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_COOPERATE)) {
-
-            } else if (p1Decision.equals(CHOICE_DEFECT) && p2Decision.equals(CHOICE_DEFECT)) {
-
+            if (!p2Commitment.equals(p2Decision)) {
+                result[1] = result[1] - punishment;
             }
         }
 

@@ -1,4 +1,5 @@
 package com.example.bbirincioglu.prisonersdilemma;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -23,18 +24,31 @@ import java.util.HashMap;
 public class GamePlayActivity extends AppCompatActivity {
     private MessageHandler messageHandler;
     private ParseConnection parseConnection;
+    private GamePlayController gamePlayController;
+    private ArrayList<Dialog> dialogs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
-        ParseObject.registerSubclass(GameResult.class);
-        setParseConnection(ParseConnection.getNewInstance());
+        setDialogs(new ArrayList<Dialog>());
+
+        DialogFactory dialogFactory = DialogFactory.getInstance();
+        dialogFactory.setContext(this);
 
         setMessageHandler(new MessageHandler(this));
         SocketSingleton socketSingleton = SocketSingleton.getInstance();
-        GamePlayController gamePlayController = GamePlayController.getInstance();
+        System.out.println("IN THE GAMEPLAY ACTIVITY onCreate: " + socketSingleton.getSocket().toString());
+
+        ParseObject.registerSubclass(GameResult.class);
+        setParseConnection(ParseConnection.getNewInstance());
+
+        setGamePlayController(new GamePlayController());
+        GamePlayController gamePlayController = getGamePlayController();
         gamePlayController.setConnectedThread(new ConnectedThread(this, socketSingleton.getSocket(), getMessageHandler()));
         gamePlayController.getConnectedThread().start();
+
+        getParseConnection().setGamePlayController(gamePlayController);
 
         if (socketSingleton.isHosted()) {
             System.out.println("IS HOSTED.");
@@ -134,6 +148,7 @@ public class GamePlayActivity extends AppCompatActivity {
             if (messageAsString != null) {
                 if (messageAsString.contains("gameNoOnly:")) {
                     System.out.println("IN THE GAME NO ONLY.");
+                    System.out.println("split 1: " + messageAsString.split(":")[0] + "split 2: " + messageAsString.split(":")[1]);
                     getParseConnection().setCurrentGameNo(Integer.valueOf(messageAsString.split(":")[1]));
                     System.out.println("IN THE GAME NO ONLY: " + getParseConnection().getCurrentGameNo());
                 } else if (messageAsString.equals("committed")){
@@ -276,7 +291,7 @@ public class GamePlayActivity extends AppCompatActivity {
         public void onClick(View v) {
             int buttonID = v.getId();
             String buttonText = ((Button) v).getText().toString();
-            GamePlayController gamePlayController = GamePlayController.getInstance();
+            GamePlayController gamePlayController = getGamePlayController();
 
             DialogFactory dialogFactory = DialogFactory.getInstance();
             dialogFactory.setContext(v.getContext());
@@ -294,7 +309,6 @@ public class GamePlayActivity extends AppCompatActivity {
             } else if (buttonID == R.id.decideToCooperateButton || buttonID == R.id.decideToDefectButton) {
                 getMessageHandler().setCurrentState(getMessageHandler().STATE_DECISION);
                 getMessageHandler().notifyObservers();
-
                 gamePlayController.doSaveDecision(v.getContext(), getParseConnection(), buttonText);
             }
         }
@@ -306,5 +320,21 @@ public class GamePlayActivity extends AppCompatActivity {
 
     public void setParseConnection(ParseConnection parseConnection) {
         this.parseConnection = parseConnection;
+    }
+
+    public GamePlayController getGamePlayController() {
+        return gamePlayController;
+    }
+
+    public void setGamePlayController(GamePlayController gamePlayController) {
+        this.gamePlayController = gamePlayController;
+    }
+
+    public ArrayList<Dialog> getDialogs() {
+        return dialogs;
+    }
+
+    public void setDialogs(ArrayList<Dialog> dialogs) {
+        this.dialogs = dialogs;
     }
 }

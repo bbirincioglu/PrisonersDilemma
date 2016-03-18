@@ -23,12 +23,23 @@ public class ParseConnection {
     private List<Object> objects;
     private int currentState;
     private int currentGameNo;
+    private boolean myDecisionSaved;
+    private GamePlayController gamePlayController;
 
     private ParseConnection() {
         setObservers(new ArrayList<ParseConnectionObserver>());
         setObjects(new ArrayList<Object>());
         setCurrentState(STATE_NO_BACKGROUND_JOB);
         setCurrentGameNo(0);
+        setMyDecisionSaved(false);
+    }
+
+    public boolean isMyDecisionSaved() {
+        return myDecisionSaved;
+    }
+
+    public void setMyDecisionSaved(boolean myDecisionSaved) {
+        this.myDecisionSaved = myDecisionSaved;
     }
 
     public static ParseConnection getInstance() {
@@ -144,7 +155,7 @@ public class ParseConnection {
                 public void done(ParseException e) {
                     if (e == null) {
                         setCurrentGameNo(gr.getGameNo());
-                        GamePlayController.getInstance().getConnectedThread().write("gameNoOnly:" + gr.getGameNo());
+                        getGamePlayController().getConnectedThread().write("gameNoOnly:" + gr.getGameNo());
                     } else {
                         e.printStackTrace();
                     }
@@ -153,6 +164,14 @@ public class ParseConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public GamePlayController getGamePlayController() {
+        return gamePlayController;
+    }
+
+    public void setGamePlayController(GamePlayController gamePlayController) {
+        this.gamePlayController = gamePlayController;
     }
 
     public int getCurrentGameNo() {
