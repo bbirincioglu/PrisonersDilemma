@@ -58,8 +58,9 @@
         </activity>
         <activity
             android:name=".GamePlayActivity"
-            android:label="@string/title_activity_game_play" >
+            android:label="@string/title_activity_game_play"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
         </activity>
     </application>
-
 </manifest>

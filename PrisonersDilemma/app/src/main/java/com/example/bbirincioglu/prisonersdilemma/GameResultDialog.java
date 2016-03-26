@@ -3,8 +3,21 @@ package com.example.bbirincioglu.prisonersdilemma;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 /**
  * Created by bbirincioglu on 3/16/2016.
@@ -35,8 +48,12 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
     }
 
     public void injectContent(GameResult gameResult) {
+        displayValues(GameSettings.loadFromPreferences(getActivity()));
         GameResultEvaluator evaluator = new GameResultEvaluator();
         int[] result = evaluator.evaluate(gameResult);
+
+        gameResult.setP1Payoff(String.valueOf(result[0]));
+        gameResult.setP2Payoff(String.valueOf(result[1]));
 
         String p1Name = gameResult.getP1Name();
         String p1Surname = gameResult.getP1Surname();
@@ -84,5 +101,42 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    private void displayValues(GameSettings settings) {
+        EditText e1 = ((EditText) findViewById(R.id.copCop));
+        e1.setText(settings.getCopCop());
+        EditText e2 = ((EditText) findViewById(R.id.copDef));
+        e2.setText(settings.getCopDef());
+        EditText e3 = ((EditText) findViewById(R.id.defCop));
+        e3.setText(settings.getDefCop());
+        EditText e4 = ((EditText) findViewById(R.id.defDef));
+        e4.setText(settings.getDefDef());
+        CheckBox checkBox = ((CheckBox) findViewById(R.id.withCommitmentCheckBox));
+        checkBox.setChecked(Boolean.valueOf(settings.getWithCommitment()));
+        EditText punishmentEditText = (EditText) findViewById(R.id.punishmentEditText);
+        punishmentEditText.setText(settings.getPunishment());
+        ((Button) findViewById(R.id.settingsSaveButton)).setVisibility(View.GONE);
+        findViewById(R.id.settingsExampleTextView).setVisibility(View.GONE);
+
+        if (checkBox.isChecked()) {
+            punishmentEditText.setVisibility(View.VISIBLE);
+        }
+
+        disableOrEnableContainerAndChildren((ViewGroup) findViewById(R.id.settingsLinearLayout), false);
+    }
+
+    private void disableOrEnableContainerAndChildren(ViewGroup container, boolean enabled) {
+        container.setEnabled(enabled);
+        int childCount = container.getChildCount();
+
+        for (int i = 0; i < childCount; i++) {
+            View child = container.getChildAt(i);
+            child.setEnabled(enabled);
+
+            if (child instanceof ViewGroup) {
+                disableOrEnableContainerAndChildren((ViewGroup) child, enabled);
+            }
+        }
     }
 }

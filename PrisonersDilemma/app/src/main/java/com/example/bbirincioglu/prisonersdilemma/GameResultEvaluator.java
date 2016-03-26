@@ -40,11 +40,11 @@ public class GameResultEvaluator {
 
         if (withCommitment) {
             if (!p1Commitment.equals(p1Decision)) {
-                result[0] = result[0] - punishment;
+                result[0] = result[0] + punishment;
             }
 
             if (!p2Commitment.equals(p2Decision)) {
-                result[1] = result[1] - punishment;
+                result[1] = result[1] + punishment;
             }
         }
 

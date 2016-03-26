@@ -13,8 +13,8 @@ import com.parse.SaveCallback;
 @ParseClassName("GameResult")
 public class GameResult extends ParseObject {
     public static final String[] HEADERS = new String[]{"GAME_NO", "P1_NAME", "P1_SURNAME", "P1_COMMITMENT",
-            "P1_DECISION", "P2_NAME", "P2_SURNAME", "P2_COMMITMENT",
-            "P2_DECISION", "COP_COP", "COP_DEF", "DEF_COP", "DEF_DEF",
+            "P1_DECISION", "P1_PAYOFF", "P2_NAME", "P2_SURNAME", "P2_COMMITMENT",
+            "P2_DECISION", "P2_PAYOFF", "COP_COP", "COP_DEF", "DEF_COP", "DEF_DEF",
             "WITH_COMMITMENT", "PUNISHMENT"};
     public static final String SPLIT_WITH = "___";
 
@@ -26,7 +26,7 @@ public class GameResult extends ParseObject {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameNo");
 
         try {
-            ParseObject parseObject = query.get("w0WN9DdCLq");
+            ParseObject parseObject = query.get("y5cXloLDWA");
             setGameNo(parseObject.getInt(Keys.GAME_NO));
             parseObject.put(Keys.GAME_NO, getGameNo() + 1);
             parseObject.saveInBackground();
@@ -158,6 +158,22 @@ public class GameResult extends ParseObject {
         return getString(Keys.PUNISHMENT);
     }
 
+    public void setP1Payoff(String p1Payoff) {
+        put(Keys.PLAYER_1_PAYOFF, p1Payoff);
+    }
+
+    public String getP1Payoff() {
+        return getString(Keys.PLAYER_1_PAYOFF);
+    }
+
+    public void setP2Payoff(String p2Payoff) {
+        put(Keys.PLAYER_2_PAYOFF, p2Payoff);
+    }
+
+    public String getP2Payoff() {
+        return getString(Keys.PLAYER_2_PAYOFF);
+    }
+
     public void saveGameResultAsHost() {
         saveInBackground(new SaveCallback() {
             @Override
@@ -180,10 +196,12 @@ public class GameResult extends ParseObject {
                 + getP1Surname() + SPLIT_WITH
                 + getP1Commitment() + SPLIT_WITH
                 + getP1Decision() + SPLIT_WITH
+                + getP1Payoff() + SPLIT_WITH
                 + getP2Name() + SPLIT_WITH
                 + getP2Surname() + SPLIT_WITH
                 + getP2Commitment() + SPLIT_WITH
                 + getP2Decision() + SPLIT_WITH
+                + getP2Payoff() + SPLIT_WITH
                 + getCopCop() + SPLIT_WITH
                 + getCopDef() + SPLIT_WITH
                 + getDefCop() + SPLIT_WITH

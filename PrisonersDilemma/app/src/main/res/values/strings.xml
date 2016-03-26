@@ -9,8 +9,7 @@
     <string name="wifiButton">WIRELESS</string>
     <string name="mobileDataButton">MOBILE DATA</string>
 
-    <string name="nameEditText">NAME</string>
-    <string name="surnameEditText">SURNAME</string>
+    <string name="nameSurnameEditText">NAME SURNAME</string>
     <string name="continueButton">CONTINUE</string>
 
     <string name="hostGameButton">HOST GAME</string>

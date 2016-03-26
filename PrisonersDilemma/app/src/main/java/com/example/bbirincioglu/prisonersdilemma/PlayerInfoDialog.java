@@ -53,9 +53,8 @@ public class PlayerInfoDialog extends Dialog implements SimpleDialog {
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String name = ((EditText) findViewById(R.id.nameEditText)).getText().toString();
-            String surname = ((EditText) findViewById(R.id.surnameEditText)).getText().toString();
-            MainMenuController.getInstance().doCheckPlayerInfo(reference, name, surname);
+            String nameSurname = ((EditText) findViewById(R.id.nameSurnameEditText)).getText().toString();
+            MainMenuController.getInstance().doCheckPlayerInfo(reference, nameSurname);
         }
     }
 }

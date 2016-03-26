@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -120,14 +121,15 @@ public class MainMenuController {
         this.bluetoothHandler = bluetoothHandler;
     }
 
-    public void doCheckPlayerInfo(PlayerInfoDialog dialog, String name, String surname) {
+    public void doCheckPlayerInfo(PlayerInfoDialog dialog, String nameSurname) {
         TextView errorMessageTextView = (TextView) dialog.findViewById(R.id.errorMessageTextView);
+        String[] subStrings = mySplit(nameSurname, " ");
 
-        if (name == null || surname == null || name.equals("") || surname.equals("")) {
+        if (subStrings.length != 2 || subStrings[0].length() < 2 || subStrings[1].length() < 2) {
             errorMessageTextView.setVisibility(View.VISIBLE);
         } else {
-            String capitalizedName = capitalizeFirstLetter(name);
-            String capitalizedSurname = capitalizeFirstLetter(surname);
+            String capitalizedName = capitalizeFirstLetter(subStrings[0]);
+            String capitalizedSurname = capitalizeFirstLetter(subStrings[1]);
             SharedPreferences sharedPreferences = dialog.getActivity().getSharedPreferences(Keys.PLAYER_INFO_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Keys.PLAYER_NAME, capitalizedName);
@@ -138,6 +140,36 @@ public class MainMenuController {
             MainMenuController controller = MainMenuController.getInstance();
             controller.doEnableDiscoverability(dialog.getActivity());
         }
+    }
+
+    private String[] mySplit(String text, String splitWith) {
+        ArrayList<String> subStrings = new ArrayList<String>();
+        int length = text.length();
+        String temp = "";
+
+        for (int i = 0; i < length; i++) {
+            char charAtI = text.charAt(i);
+
+            if ((charAtI + "").equals(splitWith)) {
+                subStrings.add(temp);
+                temp = "";
+            } else {
+                temp += charAtI;
+            }
+        }
+
+        if (!temp.equals("")) {
+            subStrings.add(temp);
+        }
+
+        String[] tempArray = new String[subStrings.size()];
+        length = tempArray.length;
+
+        for (int i = 0; i < length; i++) {
+            tempArray[i] = subStrings.get(i);
+        }
+
+        return tempArray;
     }
 
     private String capitalizeFirstLetter(String text) {

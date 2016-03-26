@@ -1,7 +1,10 @@
 package com.example.bbirincioglu.prisonersdilemma;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -101,9 +104,25 @@ public class GamePlayController {
     public void doDisplayGameResult(Context context, ParseConnection parseConnection) {
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(context);
-        GameResultDialog gameResultDialog = (GameResultDialog) dialogFactory.create(DialogFactory.DIALOG_GAME_RESULT);
+
+        final GameResultDialog gameResultDialog = (GameResultDialog) dialogFactory.create(DialogFactory.DIALOG_GAME_RESULT);
         GameResult gameResult = (GameResult) parseConnection.obtainObject("GameResult", "gameNo", parseConnection.getCurrentGameNo());
         gameResultDialog.injectContent(gameResult);
-        gameResultDialog.show();
+
+        final Dialog dialog = dialogFactory.create(DialogFactory.DIALOG_BACKGROUND_JOB);
+        ((TextView) dialog.findViewById(R.id.backgroundJobTextView)).setText("Sending Results To Server...");
+        dialog.show();
+
+        gameResult.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    dialog.dismiss();
+                    gameResultDialog.show();
+                } else {
+                    ((TextView) dialog.findViewById(R.id.backgroundJobTextView)).setText(e.getLocalizedMessage());
+                }
+            }
+        });
     }
 }

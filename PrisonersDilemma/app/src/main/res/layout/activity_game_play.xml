@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.example.bbirincioglu.prisonersdilemma.GamePlayActivity">
     <TextView
-        android:id="@id/nameEditText"
+        android:id="@id/nameSurnameEditText"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_width="wrap_content"

@@ -16,15 +16,18 @@ import android.widget.TextView;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameResultsActivity extends AppCompatActivity implements ParseConnectionObserver {
     private GameResultsController gameResultsController;
+    private ArrayList<Dialog> dialogs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_results);
+        setDialogs(new ArrayList<Dialog>());
         ParseObject.registerSubclass(GameResult.class);
 
         setGameResultsController(new GameResultsController());
@@ -90,14 +93,9 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
 
         } else if (currentState == ParseConnection.STATE_BACKGROUND_JOB_FINISHED) {
             ListView listView = (ListView) findViewById(R.id.gameResultsListView);
-            List<GameResult> gameResultList = (List) parseConnection.getObjects();
-
-            for (int i = 0; i < gameResultList.size(); i++) {
-                System.out.println("Game Result List: " + gameResultList.get(i).toString());
-            }
-
-            ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.game_results_row, gameResultList);
-            listView.setAdapter(arrayAdapter);
+            ArrayList<GameResult> gameResultList = (ArrayList) parseConnection.getObjects();
+            GameResultListAdapter adapter = new GameResultListAdapter(this, R.layout.game_result_list_row, gameResultList);
+            listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -106,7 +104,7 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
                 }
             });
 
-            arrayAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -135,5 +133,13 @@ public class GameResultsActivity extends AppCompatActivity implements ParseConne
 
     public void setGameResultsController(GameResultsController gameResultsController) {
         this.gameResultsController = gameResultsController;
+    }
+
+    public ArrayList<Dialog> getDialogs() {
+        return dialogs;
+    }
+
+    public void setDialogs(ArrayList<Dialog> dialogs) {
+        this.dialogs = dialogs;
     }
 }

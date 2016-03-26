@@ -9,8 +9,7 @@
     <item type="id" name="wifiButton"></item>
     <item type="id" name="mobileDataButton"></item>
 
-    <item type="id" name="nameEditText"></item>
-    <item type="id" name="surnameEditText"></item>
+    <item type="id" name="nameSurnameEditText"></item>
     <item type="id" name="errorMessageTextView"></item>
     <item type="id" name="playerInfoDialogContainer"></item>
     <item type="id" name="continueButton"></item>

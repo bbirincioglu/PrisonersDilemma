@@ -33,6 +33,10 @@ public class GameResultsController {
         ParseConnection parseConnection = getParseConnection();
         List<Object> gameResults = parseConnection.getObjects();
         Writer writer = new Writer(context);
+        DialogFactory dialogFactory = DialogFactory.getInstance();
+        dialogFactory.setContext(context);
+        Dialog dialog = dialogFactory.create(DialogFactory.DIALOG_BACKGROUND_JOB);
+        writer.addObserver((WriterObserver) dialog);
         writer.writeExcel("gameResults.xls", "gameResults", GameResult.HEADERS, gameResults);
     }
 

@@ -104,33 +104,56 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             String text = s.toString();
+            EditText editText = (EditText) findViewById(R.id.punishmentEditText);
+            editText.removeTextChangedListener(this);
 
-            if (text != null && !text.equals("")) {
-                String[] result = validate(text);
-                boolean isValid = Boolean.valueOf(result[0]);
-                String validatedText = result[1];
+            if (text == null || text.equals("")) {
+                s.append("0");
+            } else {
+                if (text.length() == 1) {
+                    if (text.equals("0") || text.equals("-")) {
+                        if (text.equals("-")) {
+                            s.append("1");
+                        }
+                    } else {
+                        s.clear();
+                        s.append("0");
+                    }
+                } else {
+                    String[] result = validate(text);
+                    boolean isValid = Boolean.valueOf(result[0]);
+                    String validatedText = result[1];
 
-                if (!isValid) {
-                    s.clear();
-                    s.append(validatedText);
+                    if (!isValid) {
+                        s.clear();
+                        s.append(validatedText);
+                    }
                 }
             }
+
+            editText.addTextChangedListener(this);
         }
 
         private String[] validate(String text) {
             String[] result = new String[2];
             String isValid = "true";
-            String validatedText = "";
             String control = "0123456789";
+            String validatedText = "-";
             int length = text.length();
 
             for (int i = 0; i < length; i++) {
                 char charAtI = text.charAt(i);
 
-                if (control.contains("" + charAtI)) {
-                    validatedText += charAtI;
+                if (i == 0) {
+                    if (charAtI != '-') {
+                        isValid = "false";
+                    }
                 } else {
-                    isValid = "false";
+                    if (control.contains("" + charAtI)) {
+                        validatedText += charAtI;
+                    } else {
+                        isValid = "false";
+                    }
                 }
             }
 

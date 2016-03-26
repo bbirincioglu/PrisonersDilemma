@@ -26,6 +26,8 @@ public class ActivitySwitcher {
             dialogs = ((BluetoothGameActivity) previous).getDialogs();
         } else if (previous instanceof GamePlayActivity) {
             dialogs = ((GamePlayActivity) previous).getDialogs();
+        } else if (previous instanceof GameResultsActivity) {
+            dialogs = ((GameResultsActivity) previous).getDialogs();
         }
 
         if (dialogs != null) {

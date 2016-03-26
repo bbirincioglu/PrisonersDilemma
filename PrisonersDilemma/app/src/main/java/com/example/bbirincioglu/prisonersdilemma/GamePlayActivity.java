@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,7 +41,6 @@ public class GamePlayActivity extends AppCompatActivity {
 
         setMessageHandler(new MessageHandler(this));
         SocketSingleton socketSingleton = SocketSingleton.getInstance();
-        System.out.println("IN THE GAMEPLAY ACTIVITY onCreate: " + socketSingleton.getSocket().toString());
 
         ParseObject.registerSubclass(GameResult.class);
         setParseConnection(ParseConnection.getNewInstance());
@@ -50,6 +52,10 @@ public class GamePlayActivity extends AppCompatActivity {
 
         getParseConnection().setGamePlayController(gamePlayController);
 
+        BackgroundJobDialog connectServerDialog = (BackgroundJobDialog) dialogFactory.create(DialogFactory.DIALOG_BACKGROUND_JOB);
+        connectServerDialog.setContentView(composeInformativeContentView("Waiting For Server And Opponent Response..."));
+        getParseConnection().addObserver(connectServerDialog);
+
         if (socketSingleton.isHosted()) {
             System.out.println("IS HOSTED.");
             GameSettings gameSettings = GameSettings.loadFromPreferences(this);
@@ -58,6 +64,7 @@ public class GamePlayActivity extends AppCompatActivity {
 
             getParseConnection().createEmptyGameResult();
         } else {
+            getParseConnection().setCurrentState(ParseConnection.STATE_BACKGROUND_JOB_STARTED);
             System.out.println("IS NOT HOSTED.");
         }
 
@@ -71,6 +78,19 @@ public class GamePlayActivity extends AppCompatActivity {
         findViewById(R.id.commitToDefectButton).setOnClickListener(buttonListener);
         findViewById(R.id.decideToCooperateButton).setOnClickListener(buttonListener);
         findViewById(R.id.decideToDefectButton).setOnClickListener(buttonListener);
+    }
+
+    private LinearLayout composeInformativeContentView(String message) {
+        TextView informativeTextView = new TextView(this);
+        informativeTextView.setText(message);
+        informativeTextView.setGravity(Gravity.CENTER);
+        informativeTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        LinearLayout dummyContainer = new LinearLayout(this);
+        dummyContainer.setGravity(Gravity.CENTER);
+        dummyContainer.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout.LayoutParams) dummyContainer.getLayoutParams()).gravity = Gravity.CENTER;
+        dummyContainer.addView(informativeTextView);
+        return dummyContainer;
     }
 
     @Override
@@ -150,6 +170,7 @@ public class GamePlayActivity extends AppCompatActivity {
                     System.out.println("IN THE GAME NO ONLY.");
                     System.out.println("split 1: " + messageAsString.split(":")[0] + "split 2: " + messageAsString.split(":")[1]);
                     getParseConnection().setCurrentGameNo(Integer.valueOf(messageAsString.split(":")[1]));
+                    getParseConnection().setCurrentState(ParseConnection.STATE_BACKGROUND_JOB_FINISHED);
                     System.out.println("IN THE GAME NO ONLY: " + getParseConnection().getCurrentGameNo());
                 } else if (messageAsString.equals("committed")){
                     setIsOtherPlayerCommitted(true);
@@ -264,7 +285,7 @@ public class GamePlayActivity extends AppCompatActivity {
             textViewText = name + " " + surname + " " + "(Player 2)";
         }
 
-        ((TextView) findViewById(R.id.nameEditText)).setText(textViewText);
+        ((TextView) findViewById(R.id.nameSurnameEditText)).setText(textViewText);
 
         if (!checkBox.isChecked()) {
             findViewById(R.id.commitToLinearLayout).setVisibility(View.GONE);
@@ -336,5 +357,16 @@ public class GamePlayActivity extends AppCompatActivity {
 
     public void setDialogs(ArrayList<Dialog> dialogs) {
         this.dialogs = dialogs;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        try {
+            SocketSingleton.getInstance().getSocket().close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

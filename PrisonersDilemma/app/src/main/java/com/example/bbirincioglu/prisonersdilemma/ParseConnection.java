@@ -147,23 +147,31 @@ public class ParseConnection {
     }
 
     public void createEmptyGameResult() {
-        try {
-            final GameResult gr = new GameResult();
-            gr.obtainGameNo();
-            gr.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        setCurrentGameNo(gr.getGameNo());
-                        getGamePlayController().getConnectedThread().write("gameNoOnly:" + gr.getGameNo());
-                    } else {
-                        e.printStackTrace();
-                    }
+        setCurrentState(STATE_BACKGROUND_JOB_STARTED);
+        final GameResult gr = new GameResult();
+        class MyRunnable implements Runnable {
+            public void run() {
+                try {
+                    gr.obtainGameNo();
+                    gr.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                setCurrentGameNo(gr.getGameNo());
+                                getGamePlayController().getConnectedThread().write("gameNoOnly:" + gr.getGameNo());
+                                setCurrentState(STATE_BACKGROUND_JOB_FINISHED);
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+            }
         }
+
+        new Thread(new MyRunnable()).start();
     }
 
     public GamePlayController getGamePlayController() {

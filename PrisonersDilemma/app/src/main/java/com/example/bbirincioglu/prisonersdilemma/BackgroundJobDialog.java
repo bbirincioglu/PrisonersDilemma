@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by bbirincioglu on 3/6/2016.
  */
-public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseConnectionObserver, ConnectionThreadObserver, GamePlayActivity.MessageHandlerObserver {
+public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseConnectionObserver, ConnectionThreadObserver, GamePlayActivity.MessageHandlerObserver, WriterObserver {
     private Activity activity;
 
     public BackgroundJobDialog(Context context) {
@@ -28,6 +28,10 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
 
         if (getActivity() instanceof GamePlayActivity) {
             ((GamePlayActivity) getActivity()).getDialogs().add(this);
+        }
+
+        if (getActivity() instanceof GameResultsActivity) {
+            ((GameResultsActivity) getActivity()).getDialogs().add(this);
         }
     }
 
@@ -141,6 +145,27 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
             } else {
                 textView.setText(waitingDecide);
             }
+        }
+    }
+
+    @Override
+    public void update(Writer writer) {
+        int currentState = writer.getCurrentState();
+        TextView textView = (TextView) findViewById(R.id.backgroundJobTextView);
+
+        System.out.println("CURRENT STATE OF WRITER: " + currentState);
+
+        if (currentState == Writer.STATE_NO_WRITING) {
+            if (isShowing()) {
+                dismiss();
+            }
+        } else if (currentState == Writer.STATE_WRITING) {
+            textView.setText("Writing Into Secure Digital Card with File Name: \"gameResults.xls\"");
+            System.out.println(textView.getText());
+            show();
+        } else if (currentState == Writer.STATE_WRITING_FAILED) {
+            textView.setText("Writing Failed: " + writer.getError());
+            show();
         }
     }
 

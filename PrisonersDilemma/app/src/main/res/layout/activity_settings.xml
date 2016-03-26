@@ -12,6 +12,7 @@
     android:id="@+id/settingsLinearLayout">
 
     <TextView
+        android:id="@+id/player2ID"
         android:text="P  L  A  Y  E  R  2"
         android:gravity="right"
         android:layout_marginRight="5dp"
@@ -26,6 +27,7 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/player1ID"
             android:text="P\nL\nA\nY\nE\nR\n1\n"
             android:textStyle="bold"
             android:gravity="bottom"

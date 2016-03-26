@@ -8,20 +8,14 @@
     android:id="@id/playerInfoDialogContainer">
 
     <EditText
-        android:hint="@string/nameEditText"
-        android:id="@id/nameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-    <EditText
-        android:hint="@string/surnameEditText"
-        android:id="@id/surnameEditText"
+        android:hint="@string/nameSurnameEditText"
+        android:id="@id/nameSurnameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
     <TextView
         android:id="@id/errorMessageTextView"
-        android:hint="FILL ALL FIELDS!!!"
+        android:hint="FILL THE FIELD CORRECTLY!!!"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"

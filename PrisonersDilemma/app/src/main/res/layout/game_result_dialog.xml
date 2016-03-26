@@ -4,8 +4,18 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:id="@+id/game_result_dialog_container">
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <include layout="@layout/activity_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="4"/>
+    </TableRow>
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,28 +24,28 @@
         <EditText
             android:text="NAME-SURN."
             android:textStyle="bold"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:textColor="@android:color/holo_red_dark"/>
         <EditText
             android:text="COMMITMENT"
             android:textStyle="bold"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:textColor="@android:color/holo_red_dark"/>
         <EditText
             android:text="DECISION"
             android:textStyle="bold"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:textColor="@android:color/holo_red_dark"/>
         <EditText
             android:text="PAYOFF"
             android:textStyle="bold"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:textColor="@android:color/holo_red_dark"/>
@@ -49,26 +59,26 @@
         <EditText
             android:id="@+id/p1NameEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p1CommitmentEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p1DecisionEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
 
         <EditText
             android:id="@+id/p1PayoffEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
     </TableRow>
@@ -81,26 +91,26 @@
         <EditText
             android:id="@+id/p2NameEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p2CommitmentEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
         <EditText
             android:id="@+id/p2DecisionEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
 
         <EditText
             android:id="@+id/p2PayoffEditText"
             android:text="null"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:gravity="center"
             android:layout_width="wrap_content"/>
     </TableRow>
