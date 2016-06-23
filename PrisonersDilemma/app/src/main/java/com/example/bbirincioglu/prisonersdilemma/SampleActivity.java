@@ -13,7 +13,7 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 import java.util.Random;
-
+//Dummy Activity. Don't Take Into Consideration.
 public class SampleActivity extends AppCompatActivity {
 
     @Override

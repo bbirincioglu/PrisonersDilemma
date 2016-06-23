@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by bbirincioglu on 3/6/2016.
+ * Controller class for SettingsActivity. It also has all the listeners for GUI objects of the SettingsActivity.
  */
 public class SettingsController implements TextWatcher, View.OnClickListener{
     private static SettingsController instance;
@@ -33,7 +33,7 @@ public class SettingsController implements TextWatcher, View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) { //Listens for check boxes, and buttons
         int id = v.getId();
         Context context = v.getContext();
         Activity activity = (Activity) context;
@@ -42,10 +42,10 @@ public class SettingsController implements TextWatcher, View.OnClickListener{
             CheckBox withCommitmentCheckBox = ((CheckBox) v);
             int punishmentVisibility;
 
-            if (withCommitmentCheckBox.isChecked()) {
+            if (withCommitmentCheckBox.isChecked()) { //it is checked, thus make punishment edit text visible so that player can enter a punishment value.
                 punishmentVisibility = View.VISIBLE;
             } else {
-                punishmentVisibility = View.GONE;
+                punishmentVisibility = View.GONE; //it is not checked, disappear punishment edit text.
             }
 
             activity.findViewById(R.id.punishmentEditText).setVisibility(punishmentVisibility);
@@ -102,6 +102,7 @@ public class SettingsController implements TextWatcher, View.OnClickListener{
         }
     }
 
+    //removes invalid characters from text.
     private String[] checkInvalidChars(String text) {
         String[] data = new String[2];
         String validChars = "0123456789-,";
@@ -146,6 +147,7 @@ public class SettingsController implements TextWatcher, View.OnClickListener{
         return result;
     }
 
+    //divides text according to "splitWith" character, and returns substrings of "text" in string array format.
     private ArrayList<String> split(String text, char splitWith) {
         ArrayList<String> subStrings = new ArrayList<String>();
         int length = text.length();
@@ -169,6 +171,7 @@ public class SettingsController implements TextWatcher, View.OnClickListener{
         return subStrings;
     }
 
+    //check whether text is an integer or not.
     private boolean isNumeric(String text) {
         boolean result;
 

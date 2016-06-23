@@ -3,7 +3,7 @@ package com.example.bbirincioglu.prisonersdilemma;
 import android.content.Context;
 
 /**
- * Created by bbirincioglu on 3/3/2016.
+ * Interface implemented by all the actual dialog classes.
  */
 public interface SimpleDialog {
     public static final String PLAYER_INFO_DIALOG = "playerInfoDialog";

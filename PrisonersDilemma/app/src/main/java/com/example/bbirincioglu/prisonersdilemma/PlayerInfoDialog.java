@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * Created by bbirincioglu on 3/3/2016.
+ * This class is used to get player name and surname with one space in between. If there is no one space between name, and surname entered we display proper error
+ * message.
  */
 public class PlayerInfoDialog extends Dialog implements SimpleDialog {
     private Activity activity;
@@ -27,6 +28,7 @@ public class PlayerInfoDialog extends Dialog implements SimpleDialog {
         reference = this;
     }
 
+    //Load dialog layout from xml, make dialog width half of the screen, and bind listeners to buttons.
     public void initialize() {
         Activity activity = getActivity();
         setContentView(R.layout.player_info_dialog);
@@ -54,7 +56,7 @@ public class PlayerInfoDialog extends Dialog implements SimpleDialog {
         @Override
         public void onClick(View v) {
             String nameSurname = ((EditText) findViewById(R.id.nameSurnameEditText)).getText().toString();
-            MainMenuController.getInstance().doCheckPlayerInfo(reference, nameSurname);
+            MainMenuController.getInstance().doCheckPlayerInfo(reference, nameSurname); //check name, surname.
         }
     }
 }

@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Created by bbirincioglu on 3/7/2016.
+ * The class for checking wifi status, and enabling or disabling it. This is just a wrapper class.
  */
 public class InternetHandler {
     private Activity activity;

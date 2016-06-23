@@ -10,7 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
+/*
+    The class for displaying, changing and storing Game Settings.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -20,13 +22,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         DialogFactory dialogFactory = DialogFactory.getInstance();
         dialogFactory.setContext(this);
-        dialogFactory.create(DialogFactory.DIALOG_PASSWORD).show();
+        dialogFactory.create(DialogFactory.DIALOG_PASSWORD).show(); //This section of the application requires password, thus we display password dialog.
         initialize();
     }
 
     private void initialize() {
         SettingsController controller = SettingsController.getInstance();
-        GameSettings settings = GameSettings.loadFromPreferences(this);
+        GameSettings settings = GameSettings.loadFromPreferences(this); //Receive GameSettings object from Preferences, and insert values into GUI objects such as
+                                                                         //TextViews, EditTexts, RadioButtons etc...
         controller.setGameSettings(settings);
 
         EditText e1 = ((EditText) findViewById(R.id.copCop));
@@ -82,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Returns to main activity when the back button is pressed.
     @Override
     public void onBackPressed() {
         super.onBackPressed();

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by bbirincioglu on 3/1/2016.
+ * Custom Adapter class for storing and displaying Bluetooth Devices that are discovered or paired.
  */
 public class DiscoveryListAdapter extends ArrayAdapter<BluetoothDevice> {
     private ArrayList<BluetoothDevice> devices;
@@ -31,6 +31,8 @@ public class DiscoveryListAdapter extends ArrayAdapter<BluetoothDevice> {
         this.context = context;
     }
 
+    //Each row in the instance of DiscoveryListDialog is obtained via this method. We inflate into DiscoveryListDialog
+    //and construct each row dynamically.
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = null;
@@ -72,6 +74,7 @@ public class DiscoveryListAdapter extends ArrayAdapter<BluetoothDevice> {
         this.devices = devices;
     }
 
+    //CheckBox listener for selecting to which device we connect.
     private class CheckBoxListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {

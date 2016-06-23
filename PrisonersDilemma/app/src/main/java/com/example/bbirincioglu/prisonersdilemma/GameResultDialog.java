@@ -20,7 +20,7 @@ import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 /**
- * Created by bbirincioglu on 3/16/2016.
+ * Final dialog displayed to the players when the game is finished. Contains every information such as names, surnames, final total, final step number, payoffs etc.
  */
 public class GameResultDialog extends Dialog implements SimpleDialog {
     private Activity activity;
@@ -47,6 +47,7 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
         findViewById(R.id.exitButton).setOnClickListener(buttonListener);
     }
 
+    //Data stored in the game result object will be inserted into this GUI object's components. Most of the components are of type TextView.
     public void injectContent(GameResult gameResult) {
         displayValues(GameSettings.loadFromPreferences(getActivity()));
         GameResultEvaluator evaluator = new GameResultEvaluator();
@@ -78,16 +79,21 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
         ((TextView) findViewById(R.id.p2PayoffEditText)).setText(p2Payoff);
     }
 
+    //Button Listener for restart and exit buttons.
     public class ButtonListener implements View.OnClickListener {
         public void onClick(View v) {
             int buttonID = v.getId();
 
             if (buttonID == R.id.restartButton) {
-                new ActivitySwitcher().fromPreviousToNext(getActivity(), BluetoothGameActivity.class, null, true);
+                new ActivitySwitcher().fromPreviousToNext(getActivity(), BluetoothGameActivity.class, null, true); //when clicked, we have to go back to previous activity instead of
+                                                                                                                    //restarting the game. I couldn't manage to restart the game
+                                                                                                                    //by reusing the Socket which is obtained at the beginning of the game.
+                                                                                                                    //In other words, I couldn't manage to use same Socket twice.
+                                                                                                                    //Thus I force player to go back, and get a new Socket for communicating with other player.
             } else if (buttonID == R.id.exitButton) {
                 try {
-                    SocketSingleton.getInstance().getSocket().close();
-                    getActivity().finish();
+                    SocketSingleton.getInstance().getSocket().close(); //when clicked, close Socket
+                    getActivity().finish(); //and finalize activity.
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -103,6 +109,7 @@ public class GameResultDialog extends Dialog implements SimpleDialog {
         this.activity = activity;
     }
 
+    //Display game settings on the screen.
     private void displayValues(GameSettings settings) {
         EditText e1 = ((EditText) findViewById(R.id.copCop));
         e1.setText(settings.getCopCop());

@@ -11,17 +11,22 @@ import java.util.ArrayList;
 
 
 /**
- * Created by bbirincioglu on 3/6/2016.
+ * This class is responsible from displaying a dialog with appropriate message when there is a backend job going on. It is a part of Observer Design Pattern.
+ * It is observer because it is a GUI object. When there is a backend job related to database for example, it listens related domain object (an instance of
+ * ParseConnection in this case) by implemeting ParseConnectionObserver. When there is a bluetooth backend processing, it listens MessageHandler object
+ * which is a subclass of GamePlayActivity by implemeting GamePlayActivity.MessageHandlerObserver etc.
  */
 public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseConnectionObserver, ConnectionThreadObserver, GamePlayActivity.MessageHandlerObserver, WriterObserver {
     private Activity activity;
 
     public BackgroundJobDialog(Context context) {
-        super(context, android.R.style.Theme_Holo_Light_Dialog);
-        setActivity((Activity) context);
+        super(context, android.R.style.Theme_Holo_Light_Dialog); // Dialog style
+        setActivity((Activity) context); // activity on which dialog is displayed.
         setTitle("BACKGROUND JOB");
-        setCancelable(false);
+        setCancelable(false); // By doing this, we prevent user to close this activity by touching anywhere on the screen. He will not be able to close it.
 
+        /*Next 3 if clauses are there, whenever we create a dialog, we add it into activities' dialog array list so that when someone switch from one activity
+        to another, we can close the dialogs first, and close the activity.*/
         if (getActivity() instanceof BluetoothGameActivity) {
             ((BluetoothGameActivity) getActivity()).getDialogs().add(this);
         }
@@ -37,7 +42,8 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
 
     @Override
     public void initialize() {
-        setContentView(R.layout.background_job_dialog);
+        setContentView(R.layout.background_job_dialog); //GUI objects contained by this dialog are defined in the xml. In other words layout of this dialogs are
+        //defined in the xml files.
     }
 
     public Activity getActivity() {
@@ -48,19 +54,28 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         this.activity = activity;
     }
 
+    /*
+       When there is a change in the parseConnection object, it notifies all the observers by calling the method below. It gives itself as the argument
+       to the method so that GUI objects understand in which state parseConnection object is, and update their appearance accordingly.
+    */
     @Override
     public void update(ParseConnection parseConnection) {
         int currentState = parseConnection.getCurrentState();
 
-        if (currentState == ParseConnection.STATE_NO_BACKGROUND_JOB) {
+        if (currentState == ParseConnection.STATE_NO_BACKGROUND_JOB) {  //Do nothing as there is no database connection work.
 
-        } else if (currentState == ParseConnection.STATE_BACKGROUND_JOB_STARTED) {
+        } else if (currentState == ParseConnection.STATE_BACKGROUND_JOB_STARTED) {  //Open this dialog as there is some work started.
             show();
-        } else if (currentState == ParseConnection.STATE_BACKGROUND_JOB_FINISHED) {
+        } else if (currentState == ParseConnection.STATE_BACKGROUND_JOB_FINISHED) { //Close this dialog as work has finished.
             cancel();
         }
     }
 
+    /*
+        The method below observers connectionThread object. When two player tries to build a bluetooth connection, hosted player's phone (ServerConnectionThread)
+        constantly listens for the other player to join (ClientConnectionThread). Don't forget that ConnectionThread is actually an interface implemented by
+        ServerConnectionThread and ClientConnectionThread.
+     */
     @Override
     public void update(ConnectionThread connectionThread) {
         ServerConnectionThread serverConnectionThread;
@@ -68,19 +83,19 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         int currentStatus;
         TextView textView = ((TextView) findViewById(R.id.backgroundJobTextView));
 
-        if (connectionThread instanceof ServerConnectionThread) {
+        if (connectionThread instanceof ServerConnectionThread) {  //This means it is hosted player.
             serverConnectionThread = (ServerConnectionThread) connectionThread;
             currentStatus = serverConnectionThread.getCurrentStatus();
 
-            if (currentStatus == ConnectionThread.STATUS_WAITING_FOR_SOMEONE_TO_JOIN_GAME) {
+            if (currentStatus == ConnectionThread.STATUS_WAITING_FOR_SOMEONE_TO_JOIN_GAME) { //This means there is no one joining the game. Thus, show the dialog.
                 textView.setText("Waiting For Someone To Join The Game");
                 show();
-            } else if (currentStatus == ConnectionThread.STATUS_SOMEONE_JOINED_GAME) {
+            } else if (currentStatus == ConnectionThread.STATUS_SOMEONE_JOINED_GAME) {  // Someone joined the game, change the dialog content, put "Start Game" button.
                 textView.setVisibility(View.GONE);
                 Button startGameButton = ((Button) findViewById(R.id.startGameButton));
                 startGameButton.setVisibility(View.VISIBLE);
                 startGameButton.setOnClickListener(new ButtonListener());
-            } else if (currentStatus == ConnectionThread.STATUS_CONNECTION_FAILED) {
+            } else if (currentStatus == ConnectionThread.STATUS_CONNECTION_FAILED) { //If connection failed, make dialog cancelable so that user can cancel the dialog and restart all steps.
                 setCancelable(true);
                 textView.setText("Connection Failed.");
             }
@@ -88,21 +103,23 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
             clientConnectionThread = (ClientConnectionThread) connectionThread;
             currentStatus = clientConnectionThread.getCurrentStatus();
 
-            if (currentStatus == ConnectionThread.STATUS_CONNECTING) {
+            if (currentStatus == ConnectionThread.STATUS_CONNECTING) { //If client tries to connect in the backend, show dialog with suitable message.
                 textView.setText("Connecting...");
                 show();
-            } else if (currentStatus == ConnectionThread.STATUS_CONNECTED) {
+            } else if (currentStatus == ConnectionThread.STATUS_CONNECTED) { //If client is connected, put "Start Game" button to initialize the game.
                 textView.setVisibility(View.GONE);
                 Button startGameButton = ((Button) findViewById(R.id.startGameButton));
                 startGameButton.setVisibility(View.VISIBLE);
                 startGameButton.setOnClickListener(new ButtonListener());
-            } else if (currentStatus == ConnectionThread.STATUS_CONNECTION_FAILED) {
+            } else if (currentStatus == ConnectionThread.STATUS_CONNECTION_FAILED) { // If connection is failed, make dialog cancelable so that user can retry to connect.
                 setCancelable(true);
                 textView.setText("Connection Failed.");
             }
         }
     }
 
+    //This method is called during the actual game play. We display dialogs with various message to make one player wait, while other is commiting so something
+    //or when the game turn is others.
     @Override
     public void update(GamePlayActivity.MessageHandler messageHandler) {
         if (!isShowing()) {
@@ -119,35 +136,38 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         TextView textView = (TextView) findViewById(R.id.backgroundJobTextView);
         GamePlayActivity gamePlayActivity = ((GamePlayActivity) getActivity());
 
-        if (isGameWithCommitment) {
-            if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_COMMITMENT)) {
-                if (isOtherPlayerCommitted) {
+        if (isGameWithCommitment) { //game is played with commitment.
+            if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_COMMITMENT)) { //your state is commitment
+                if (isOtherPlayerCommitted) { //other has already committed, we have to close the dialog as you need to commit also.
                     dismiss();
                 } else {
-                    textView.setText(waitingCommit);
+                    textView.setText(waitingCommit); //Otherwise, we have to display a dialog for you in order to make you wait for other's commitment.
                 }
-            } else if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_DECISION)) {
-                if (isOtherPlayerDecided && ((GamePlayActivity) getActivity()).getParseConnection().isMyDecisionSaved()) {
+            } else if (messageHandler.getCurrentState().equals(GamePlayActivity.MessageHandler.STATE_DECISION)) { //your state is decision.
+                if (isOtherPlayerDecided && ((GamePlayActivity) getActivity()).getParseConnection().isMyDecisionSaved()) { //other is decided already, and your decision is also saved, so we need to close the dialogs.
                     dismiss();
                     GamePlayController controller = gamePlayActivity.getGamePlayController();
                     ParseConnection parseConnection = gamePlayActivity.getParseConnection();
                     controller.doDisplayGameResult(gamePlayActivity, parseConnection);
-                } else {
+                } else { //otherwise, either other player is not decided yet, or your decision is not saved in the server, so we need to display a waiting dialog.
                     textView.setText(waitingDecide);
                 }
             }
-        } else {
-            if (isOtherPlayerDecided && gamePlayActivity.getParseConnection().isMyDecisionSaved()) {
+        } else { //game is not played with commitment.
+            if (isOtherPlayerDecided && gamePlayActivity.getParseConnection().isMyDecisionSaved()) { //other player is already decided, and your decision is also saved, thus we have to close game is over.
                 dismiss();
                 GamePlayController controller = gamePlayActivity.getGamePlayController();
                 ParseConnection parseConnection = gamePlayActivity.getParseConnection();
                 controller.doDisplayGameResult(getActivity(), parseConnection);
             } else {
-                textView.setText(waitingDecide);
+                textView.setText(waitingDecide); //either other not decided yet, or your decision is not saved yet. Thus, display a waiting dialog.
             }
         }
     }
 
+    /*
+        This method below is when we extract all the game results into excel file by using instance of Writer class.
+     */
     @Override
     public void update(Writer writer) {
         int currentState = writer.getCurrentState();
@@ -169,6 +189,8 @@ public class BackgroundJobDialog extends Dialog implements SimpleDialog, ParseCo
         }
     }
 
+    //Basic button listener which is binded to "Start Game" button. When this button is clicked, we switch from the current activity(BluetoothGameActivity) to
+    // GamePlayActivity.
     private class ButtonListener implements View.OnClickListener {
         public void onClick(View v) {
             new ActivitySwitcher().fromPreviousToNext(getActivity(), GamePlayActivity.class, null, true);

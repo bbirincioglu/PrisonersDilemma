@@ -1,7 +1,7 @@
 package com.example.bbirincioglu.prisonersdilemma;
 
 /**
- * Created by bbirincioglu on 3/16/2016.
+ * The class for evaluating final decisions of the players, and determining which player obtained which payoff.
  */
 public class GameResultEvaluator {
     public static final String CHOICE_COOPERATE = "COOPERATE";
@@ -11,16 +11,17 @@ public class GameResultEvaluator {
 
     }
 
+    //Determine which player gets how much payoff by considering their decisions, commitments etc.
     public int[] evaluate(GameResult gameResult) {
         int[] result = null;
 
-        String p1Commitment = gameResult.getP1Commitment();
-        String p1Decision = gameResult.getP1Decision();
+        String p1Commitment = gameResult.getP1Commitment(); //get commitment of player 1.
+        String p1Decision = gameResult.getP1Decision(); //get decision of player 1.
 
-        String p2Commitment = gameResult.getP2Commitment();
-        String p2Decision = gameResult.getP2Decision();
+        String p2Commitment = gameResult.getP2Commitment(); //get commitment of player 2.
+        String p2Decision = gameResult.getP2Decision(); //get decision of player 2.
 
-        boolean withCommitment = Boolean.valueOf(gameResult.getWithCommitment());
+        boolean withCommitment = Boolean.valueOf(gameResult.getWithCommitment()); //get whether game is played with commitment or not.
         char splitWith = ',';
         int[] copCop = stringToIntArray(gameResult.getCopCop(), splitWith);
         int[] copDef = stringToIntArray(gameResult.getCopDef(), splitWith);
@@ -39,11 +40,11 @@ public class GameResultEvaluator {
         }
 
         if (withCommitment) {
-            if (!p1Commitment.equals(p1Decision)) {
+            if (!p1Commitment.equals(p1Decision)) { //Commitment is not the same as decision, thus apply punishment to player 1.
                 result[0] = result[0] + punishment;
             }
 
-            if (!p2Commitment.equals(p2Decision)) {
+            if (!p2Commitment.equals(p2Decision)) { //Commitment is not the same as decision, thus apply punishment to player 2.
                 result[1] = result[1] + punishment;
             }
         }
@@ -51,6 +52,7 @@ public class GameResultEvaluator {
         return result;
     }
 
+    //takes string, and divides string according to "splitWith" character, and returns substrings of "text" as string array.
     private int[] stringToIntArray(String text, char splitWith) {
         int[] result = new int[2];
         String temp = "";

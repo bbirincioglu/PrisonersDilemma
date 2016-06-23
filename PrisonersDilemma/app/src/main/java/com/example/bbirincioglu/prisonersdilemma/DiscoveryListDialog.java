@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by bbirincioglu on 3/1/2016.
+ * Dialog for displaying devices that are paired or just discovered.
  */
 public class DiscoveryListDialog extends Dialog implements BCReceiverObserver, SimpleDialog {
     private Activity activity;
@@ -58,6 +58,7 @@ public class DiscoveryListDialog extends Dialog implements BCReceiverObserver, S
         }
     }
 
+    //When new devices are paired or discovered, we update dialogs' rows so that they also become selectable by the user. We somewhat re-construct this dialog.
     private void updateContentView(String title, ArrayList<BluetoothDevice> pairedDevices) {
         setTitle(title);
         setContentView(R.layout.discovery_list_dialog);
@@ -84,6 +85,7 @@ public class DiscoveryListDialog extends Dialog implements BCReceiverObserver, S
         bcReceiver.addObserver(this);
     }
 
+    //To find which device is selected for connection.
     private CheckBox findSelectedCheckBox(ListView listView) {
         CheckBox selectedCheckBox = null;
         int childCount = listView.getChildCount();
@@ -113,6 +115,7 @@ public class DiscoveryListDialog extends Dialog implements BCReceiverObserver, S
         return selectedCheckBox;
     }
 
+    //Button listeners for discover and connect buttons.
     private class ButtonListener implements View.OnClickListener {
         public void onClick(View v) {
             int buttonID = v.getId();

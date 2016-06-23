@@ -8,11 +8,13 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 /**
- * Created by bbirincioglu on 3/6/2016.
+ * A custom class for storing / receiving game result to / from Parse server.
  */
 @ParseClassName("GameResult")
 public class GameResult extends ParseObject {
-    public static final String[] HEADERS = new String[]{"GAME_NO", "P1_NAME", "P1_SURNAME", "P1_COMMITMENT",
+    public static final String[] HEADERS = new String[]{"GAME_NO", "P1_NAME", "P1_SURNAME", "P1_COMMITMENT", /*Column Names while extracting to excel.
+                                                                                     They are not used while obtaining column values from database table.
+                                                                                     Instead of those we use Keys.RATIO, Keys.INITIAL_TOTAL etc.*/
             "P1_DECISION", "P1_PAYOFF", "P2_NAME", "P2_SURNAME", "P2_COMMITMENT",
             "P2_DECISION", "P2_PAYOFF", "COP_COP", "COP_DEF", "DEF_COP", "DEF_DEF",
             "WITH_COMMITMENT", "PUNISHMENT"};
@@ -22,11 +24,14 @@ public class GameResult extends ParseObject {
         super();
     }
 
+    //In the database, we have two tables (GameNo, and GameResult). GameNo has only one row which stores current game number. In order to create a row
+    //in the GameResult table, we need to receive game number from GameNo table first, and create new record in the GameResult table with this game number.
+    //Finally we increase the game number in the GameNo table.
     public void obtainGameNo() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameNo");
 
         try {
-            ParseObject parseObject = query.get("y5cXloLDWA");
+            ParseObject parseObject = query.get("y5cXloLDWA"); //Object ID for selecting row in the GameNo table.
             setGameNo(parseObject.getInt(Keys.GAME_NO));
             parseObject.put(Keys.GAME_NO, getGameNo() + 1);
             parseObject.saveInBackground();
@@ -34,6 +39,8 @@ public class GameResult extends ParseObject {
             e.printStackTrace();
         }
     }
+
+    //Key value pairs for setting and getting values from this object.
     public String getID() {
         return getString(Keys.PARSE_OBJECT_ID);
     }
